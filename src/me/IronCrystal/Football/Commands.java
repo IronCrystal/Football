@@ -16,7 +16,6 @@ public class Commands implements CommandExecutor {
 	Methods methods = new Methods();
 	GameObjects go = new GameObjects();
 
-	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player player = (Player) sender;
 		if (sender instanceof Player) {
