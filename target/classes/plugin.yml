@@ -1,6 +1,6 @@
 main: me.IronCrystal.Football.Football
 name: Football
-version: 1.0
+version: 2.1
 commands:
   fb:
     description: All commands
