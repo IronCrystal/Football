@@ -1,6 +1,7 @@
 package me.IronCrystal.Football;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,6 +23,16 @@ public class Football extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		
+		/**
+		 * Plugin Metrics
+		 */
+		try {
+		    Metrics metrics = new Metrics(this);
+		    metrics.start();
+		} catch (IOException e) {
+		    // Failed to submit the stats :-(
+		}
 
 		/**
 		 * Register Events

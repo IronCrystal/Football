@@ -31,34 +31,48 @@ public class Commands implements CommandExecutor {
 					player.sendMessage("/fb over - ends the current football game");
 					return true;
 				}
+				/**
+				 * This command is used for testing
+				 */
 				if (args [0].equalsIgnoreCase("field")) {
 					player.sendMessage(GameObjects.locationsFile.getBoolean("MadeField") + "");
 				}
 				if (args [0].equalsIgnoreCase("start"))  {
-					if (!GameObjects.locationsFile.getBoolean("MadeField")) {
-						player.sendMessage(ChatColor.RED + "You must make the field first!");
-						return true;
-					}
-					if (!GameObjects.playing) {
-						GameObjects.timer1.put("Time", Bukkit.getServer().getWorld(player.getWorld().getName()).getTime());
-						player.sendMessage(ChatColor.GREEN + "Initiated the game!");
-						Bukkit.broadcastMessage(ChatColor.GREEN + "Hurry up and join the football game!");
-						Bukkit.broadcastMessage(ChatColor.GREEN + "Type in /fb join");
-						GameObjects.joiningGame = true;
-						return true;
+					if (sender.hasPermission("Football.Admin")) {
+						if (!GameObjects.locationsFile.getBoolean("MadeField")) {
+							player.sendMessage(ChatColor.RED + "You must make the field first!");
+							return true;
+						}
+						if (!GameObjects.playing) {
+							GameObjects.timer1.put("Time", Bukkit.getServer().getWorld(player.getWorld().getName()).getTime());
+							player.sendMessage(ChatColor.GREEN + "Initiated the game!");
+							Bukkit.broadcastMessage(ChatColor.GREEN + "Hurry up and join the football game!");
+							Bukkit.broadcastMessage(ChatColor.GREEN + "Type in /fb join");
+							GameObjects.joiningGame = true;
+							return true;
+						}else{
+							player.sendMessage(ChatColor.RED + "Game already in session");
+							return true;
+						}
 					}else{
-						player.sendMessage(ChatColor.RED + "Game already in session");
-						return true;
+						sender.sendMessage(ChatColor.RED + "You do not have perms!");
 					}
 				}
 				else if (args [0].equalsIgnoreCase("over")) {
-					GameObjects.playing = false;
-					player.sendMessage(ChatColor.RED + "You ended the game!");
-					GameObjects.timer1.clear();
-					GameObjects.blueTeam.clear();
-					GameObjects.redTeam.clear();
-					return true;
+					if (sender.hasPermission("Football.Admin")) {
+						GameObjects.playing = false;
+						player.sendMessage(ChatColor.RED + "You ended the game!");
+						GameObjects.timer1.clear();
+						GameObjects.blueTeam.clear();
+						GameObjects.redTeam.clear();
+						return true;
+					}else{
+						sender.sendMessage(ChatColor.RED + "You do not have perms!");
+					}
 				}
+				/**
+				 * This command is used for testing
+				 */
 				else if (args [0].equalsIgnoreCase("times")) { 
 					World world = player.getWorld();
 					player.sendMessage("The current time is " + world.getTime());
@@ -67,18 +81,26 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 				else if (args [0].equalsIgnoreCase("create")) {
-					player.sendMessage(ChatColor.GREEN + "Left click each of the opposite corners of the field");
-					GameObjects.makingField = true;
-					go.logger.info(GameObjects.makingField + "");
-					return true;
+					if (sender.hasPermission("Football.Admin")) {
+						player.sendMessage(ChatColor.GREEN + "Left click each of the opposite corners of the field");
+						GameObjects.makingField = true;
+						go.logger.info(GameObjects.makingField + "");
+						return true;
+					}else{
+						sender.sendMessage(ChatColor.RED + "You do not have perms!");
+					}
 				}
 				else if (args [0].equalsIgnoreCase("done")) {
-					player.sendMessage(ChatColor.GREEN + "Field Created");
-					GameObjects.makingField = false;
-					GameObjects.madeField = true;
-					GameObjects.locationsFile.set("MadeField", true);
-					methods.saveFile(GameObjects.locations, GameObjects.locationsFile);
-					return true;
+					if (sender.hasPermission("Football.Admin")) {
+						player.sendMessage(ChatColor.GREEN + "Field Created");
+						GameObjects.makingField = false;
+						GameObjects.madeField = true;
+						GameObjects.locationsFile.set("MadeField", true);
+						methods.saveFile(GameObjects.locations, GameObjects.locationsFile);
+						return true;
+					}else{
+						sender.sendMessage(ChatColor.RED + "You do not have perms!");
+					}
 				}
 				else if (args [0].equalsIgnoreCase("join")) {
 					if (GameObjects.joiningGame != true) {
@@ -135,10 +157,14 @@ public class Commands implements CommandExecutor {
 					}
 				}
 				else if (args [0].equalsIgnoreCase("cancel")) {
-					methods.clearField();
+					if (sender.hasPermission("Football.Admin")) {
+						methods.clearField();
 
-					player.sendMessage(ChatColor.GREEN + "Field creation cancelled.");
-					return true;
+						player.sendMessage(ChatColor.GREEN + "Field creation cancelled.");
+						return true;
+					}else{
+						sender.sendMessage(ChatColor.RED + "You do not have perms!");
+					}
 				}
 			}			
 		}
